@@ -1,8 +1,8 @@
 {
-  "name": "@decentralized-identity/ion-sdk",
-  "version": "0.6.0",
-  "description": "TypeScript SDK for ION",
-  "repository": "https://github.com/decentralized-identity/ion-sdk",
+  "name": "@averato/did-tools",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for Ada DiD",
+  "repository": "https://github.com/averato/did-tools",
   "license": "Apache-2.0",
   "main": "dist/lib/index.js",
   "types": "dist/lib/index.d.ts",
@@ -20,6 +20,7 @@
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "copyfiles": "2.3.0",
+    "cross-fetch": "^3.1.5",
     "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.22.1",
@@ -57,6 +58,9 @@
     "cache": false,
     "extension": [
       ".ts"
+    ],
+    "workspaces": [
+      "examples/*"
     ],
     "include": [
       "dist/lib/**",
