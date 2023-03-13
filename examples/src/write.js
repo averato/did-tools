@@ -1,4 +1,5 @@
-import { DID } from '../../node_modules/@decentralized-identity/ion-tools/dist/cjs/index.js';
+import { DID } from './did.js';
+import {generateKeyPair} from './utils.js';
 import { writeFile } from 'fs/promises';
 
 // Generate keys and ION DID
@@ -8,7 +9,7 @@ let did = new DID({
     publicKeys: [
       {
         id: 'key-1',
-        oleype: 'EcdsaSecp256k1VerificationKey2019',
+        type: 'EcdsaSecp256k1VerificationKey2019',
         publicKeyJwk: authnKeys.publicJwk,
         purposes: [ 'authentication' ]
       }
@@ -28,8 +29,8 @@ let did = new DID({
 // let anchorResponse = await anchor(createRequest);
 
 // Store the key material and source data of all operations that have been created for the DID
-let ionOps = await did.getAllOperations();
-await writeFile('./ion-did-ops-v1.json', JSON.stringify({ ops: ionOps }));
+let didOps = await did.getAllOperations();
+await writeFile('./ion-did-ops-v1.json', JSON.stringify({ ops: didOps }));
 
 const longFormURI  = await did.getURI();
 const shortFormURI = await did.getURI('short');

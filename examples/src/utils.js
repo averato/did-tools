@@ -5,7 +5,7 @@ import * as ed25519 from '@noble/ed25519';
 import * as secp256k1 from '@noble/secp256k1';
 
 import { base64url } from 'multiformats/bases/base64';
-import * as DidKey from '../dist/lib/DidKey.js';
+import * as DidKey from '../../dist/lib/DidKey.js';
 import { sha256 } from 'multiformats/hashes/sha2';
 
 // supports fetch in: node, browsers, and browser extensions.
@@ -30,31 +30,32 @@ const fetch = globalThis.fetch ?? crossFetch;
  */
 
 /**
- * @typedef {object} KeyPair
- * @property {PrivateJWK} privateJwk
- * @property {PublicJWK} publicJwk
- */
-
-const keyGenerators = {
-  'Ed25519': DidKey.generateEd25519OperationKeyPair,
-  'EdDSA': DidKey.generateEd25519OperationKeyPair,
-  'secp256k1': DidKey.generateEs256kOperationKeyPair,
-  'ES256K': DidKey.generateEs256kOperationKeyPair
-};
-
-/**
  * generates a keypair of the type provided
  * @param {'Ed25519'| 'EdDSA' | 'secp256k1' | 'ES256K'} type
  * @returns {KeyPair}
  */
-export async function generateKeyPair(type = 'secp256k1') {
-  const keyGeneratorFn = keyGenerators[type];
+export async function generateKeyPair(type = 'Ed25519') {
+ /**
+  * @typedef {object} KeyPair
+  * @property {PrivateJWK} privateJwk
+  * @property {PublicJWK} publicJwk
+  */
+  const keyGenerators = {
+   'Ed25519': DidKey.generateEd25519OperationKeyPair,
+// 'EdDSA': DidKey.generateEs256kOperationKeyPair,
+// 'secp256k1': DidKey.generateEs256kOperationKeyPair,
+   'ES256K': DidKey.generateEs256kOperationKeyPair
+  };
 
+  const keyGeneratorFn = DidKey.generateEd25519OperationKeyPair;
+  // DidKey.generateEd25519OperationKeyPair; //  keyGenerators[type];
+  console.log('We have types: '.concat(JSON.stringify(keyGeneratorFn))); 
   if (!keyGeneratorFn) {
-    throw new Error('Unsupported key type');
+   // throw new Error('Unsupported key type');
   }
 
-  const [ publicJwk, privateJwk ] = await keyGeneratorFn();
+  const [publicJwk, privateJwk] = await DidKey.generateEd25519OperationKeyPair();
+// keyGeneratorFn();
   return { publicJwk, privateJwk };
 }
 
