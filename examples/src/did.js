@@ -1,4 +1,4 @@
-import { AdaDid, DidRequest, LocalSigner } from '../../dist/index.js';
+import { AdaDid, DidRequest, LocalSigner } from '@averato/did-tools';
 import { generateKeyPair } from './utils.js';
 
 export class DID {
