@@ -1,4 +1,4 @@
-import IonDocumentModel from './IonDocumentModel';
+import DidDocumentModel from './DidDocumentModel';
 import OperationType from '../enums/OperationType';
 
 /**
@@ -12,7 +12,7 @@ export default interface IonRecoverRequestModel {
     updateCommitment: string,
     patches: {
         action: string,
-        document: IonDocumentModel;
+        document: DidDocumentModel;
     }[]
   },
   signedData: string

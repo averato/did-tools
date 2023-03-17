@@ -1,6 +1,6 @@
 import DidRequest from './DidRequest';
 import Encoder from './Encoder';
-import IonDocumentModel from './models/IonDocumentModel';
+import DidDocumentModel from './models/DidDocumentModel';
 import IonSdkConfig from './IonSdkConfig';
 import JsonCanonicalizer from './JsonCanonicalizer';
 import JwkEs256k from './models/JwkEs256k';
@@ -17,7 +17,7 @@ export default class AdaDid {
   public static async createLongFormDid (input: {
     recoveryKey: JwkEs256k;
     updateKey: JwkEs256k;
-    document: IonDocumentModel;
+    document: DidDocumentModel;
   }): Promise<string> {
     const createRequest = await DidRequest.createCreateRequest(input);
 

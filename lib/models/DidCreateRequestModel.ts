@@ -1,10 +1,10 @@
-import IonDocumentModel from './IonDocumentModel';
+import DidDocumentModel from './DidDocumentModel';
 import OperationType from '../enums/OperationType';
 
 /**
  * Data model representing a public key in the DID Document.
  */
-export default interface IonCreateRequestModel {
+export default interface DidCreateRequestModel {
   type: OperationType;
   suffixData: {
     deltaHash: string;
@@ -14,7 +14,7 @@ export default interface IonCreateRequestModel {
     updateCommitment: string;
     patches: {
       action: string;
-      document: IonDocumentModel;
+      document: DidDocumentModel;
     }[];
   }
 }

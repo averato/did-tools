@@ -1,29 +1,28 @@
-import { AdaDid, DidRequest, LocalSigner } from '../../dist/lib/index.js';
-import { generateKeyPair } from './utils.js';
+import { AdaDid, DidRequest, LocalSigner } from './index';
+import { generateKeyPair } from './Utils';
 
-export class DID {
-  #ops;
-  #opQueue = Promise.resolve();
-  #longForm;
-  #longFormPromise;
+export default class DiD {
+  private ops: {} ;
+  private opQueue = Promise.resolve();
+  longForm: string = '';
+  longFormPromise = Promise.resolve();
 
-  constructor(options = { }) {
-    this.#ops = options.ops || [ ];
-    if (!this.#ops.length) {
-      this.#ops.push(this.generateOperation('create', options.content || { }, false));
+  constructor(
+    readonly options: {ops: {content: {}}  }) {
+    this.ops = options.ops || this.generateOperation('create', options.content || { }, false));
     }
   }
 
   async generateOperation(type, content, commit = true) {
-    return this.#addToOpQueue(() => this.#generateOperation(type, content, commit));
+    return this.#addToOpQueue(() => this.generateOperation(type, content, commit));
   }
 
-  async #addToOpQueue(callback = () => Promise.resolve()) {
-    const opQueue = this.#opQueue;
-    this.#opQueue = new Promise((resolve, reject) => {
+  async addToOpQueue(callback = () => Promise.resolve()) {
+    const opQueue = this.opQueue;
+    this.opQueue = new Promise((resolve, reject) => {
       opQueue.finally(() => callback().then(resolve, reject));
     });
-    return this.#opQueue;
+    return this.opQueue;
   }
 
   async #generateOperation(type, content, commit) {

@@ -1,5 +1,5 @@
 import DidRequest from '../lib/DidRequest';
-import IonDocumentModel from '../lib/models/IonDocumentModel';
+import DidDocumentModel from '../lib/models/DidDocumentModel';
 import IonError from '../lib/IonError';
 import LocalSigner from '../lib/LocalSigner';
 import OperationType from '../lib/enums/OperationType';
@@ -15,7 +15,7 @@ describe('IonRequest', () => {
       const service = require('./vectors/inputs/service1.json');
       const services = [service];
 
-      const document : IonDocumentModel = {
+      const document : DidDocumentModel = {
         publicKeys,
         services
       };
@@ -77,7 +77,7 @@ describe('IonRequest', () => {
       const service = require('./vectors/inputs/service1.json');
       const services = [service];
 
-      const document : IonDocumentModel = {
+      const document : DidDocumentModel = {
         publicKeys,
         services
       };

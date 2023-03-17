@@ -4,10 +4,10 @@
   "description": "Examples for DiD Tools - utilities to make using Ada DIDs easy peasy lemon squeezy",
   "license": "Apache-2.0",
   "type": "module",
-  "main": "./dist/esm/src/index.js",
+  "main": "./dist/cjs/index.js",
   "module": "./dist/esm/src/index.js",
   "exports": {
-    "require": "./dist/esm/src/index.js",
+    "require": "./dist/cjs/index.js",
     "import": "./dist/esm/src/index.js"
   },
   "scripts": {

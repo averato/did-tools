@@ -5,11 +5,11 @@ import AdaDid from './AdaDid';
 import AdaNetwork from './enums/AdaNetwork';
 import DidKey from './DidKey';
 import DidRequest from './DidRequest';
-import IonDocumentModel from './models/IonDocumentModel';
-import IonPublicKeyModel from './models/IonPublicKeyModel';
+import DidDocumentModel from './models/DidDocumentModel';
+import DidPublicKeyModel from './models/DidPublicKeyModel';
 import IonPublicKeyPurpose from './enums/IonPublicKeyPurpose';
 import IonSdkConfig from './IonSdkConfig';
-import IonServiceModel from './models/IonServiceModel';
+import DidServiceModel from './models/DidServiceModel';
 import ISigner from './interfaces/ISigner';
 import JwkEd25519 from './models/JwkEd25519';
 import JwkEs256k from './models/JwkEs256k';
@@ -18,14 +18,14 @@ import LocalSigner from './LocalSigner';
 export {
   ISigner,
   AdaDid,
-  IonDocumentModel,
+  DidDocumentModel,
   DidKey,
   AdaNetwork,
-  IonPublicKeyModel,
+  DidPublicKeyModel,
   IonPublicKeyPurpose,
   DidRequest,
   IonSdkConfig,
-  IonServiceModel,
+  DidServiceModel,
   JwkEd25519,
   JwkEs256k,
   LocalSigner

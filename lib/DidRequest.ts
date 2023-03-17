@@ -2,14 +2,14 @@ import * as URI from 'uri-js';
 import ErrorCode from './ErrorCode';
 import ISigner from './interfaces/ISigner';
 import InputValidator from './InputValidator';
-import IonCreateRequestModel from './models/IonCreateRequestModel';
+import DidCreateRequestModel from './models/DidCreateRequestModel';
 import IonDeactivateRequestModel from './models/IonDeactivateRequestModel';
-import IonDocumentModel from './models/IonDocumentModel';
+import DidDocumentModel from './models/DidDocumentModel';
 import IonError from './IonError';
-import IonPublicKeyModel from './models/IonPublicKeyModel';
+import DidPublicKeyModel from './models/DidPublicKeyModel';
 import IonRecoverRequestModel from './models/IonRecoverRequestModel';
 import IonSdkConfig from './IonSdkConfig';
-import IonServiceModel from './models/IonServiceModel';
+import DidServiceModel from './models/DidServiceModel';
 import IonUpdateRequestModel from './models/IonUpdateRequestModel';
 import JsonCanonicalizer from './JsonCanonicalizer';
 import JwkEs256k from './models/JwkEs256k';
@@ -29,8 +29,8 @@ export default class DidRequest {
   public static async createCreateRequest (input: {
     recoveryKey: JwkEs256k;
     updateKey: JwkEs256k;
-    document: IonDocumentModel;
-  }): Promise<IonCreateRequestModel> {
+    document: DidDocumentModel;
+  }): Promise<DidCreateRequestModel> {
     const recoveryKey = input.recoveryKey;
     const updateKey = input.updateKey;
     const didDocumentKeys = input.document.publicKeys;
@@ -110,7 +110,7 @@ export default class DidRequest {
     recoveryPublicKey: JwkEs256k,
     nextRecoveryPublicKey: JwkEs256k,
     nextUpdatePublicKey: JwkEs256k,
-    document: IonDocumentModel,
+    document: DidDocumentModel,
     signer: ISigner
   }): Promise<IonRecoverRequestModel> {
     // Validate DID suffix
@@ -170,9 +170,9 @@ export default class DidRequest {
     updatePublicKey: JwkEs256k;
     nextUpdatePublicKey: JwkEs256k;
     signer: ISigner;
-    servicesToAdd?: IonServiceModel[];
+    servicesToAdd?: DidServiceModel[];
     idsOfServicesToRemove?: string[];
-    publicKeysToAdd?: IonPublicKeyModel[];
+    publicKeysToAdd?: DidPublicKeyModel[];
     idsOfPublicKeysToRemove?: string[];
   }): Promise<IonUpdateRequestModel> {
     // Validate DID suffix
@@ -279,7 +279,7 @@ export default class DidRequest {
     Multihash.validateEncodedHashComputedUsingSupportedHashAlgorithm(didSuffix, 'didSuffix');
   }
 
-  private static validateDidDocumentKeys (publicKeys?: IonPublicKeyModel[]) {
+  private static validateDidDocumentKeys (publicKeys?: DidPublicKeyModel[]) {
     if (publicKeys === undefined) {
       return;
     }
@@ -303,7 +303,7 @@ export default class DidRequest {
     }
   }
 
-  private static validateServices (services?: IonServiceModel[]) {
+  private static validateServices (services?: DidServiceModel[]) {
     if (services !== undefined && services.length !== 0) {
       const serviceIdSet: Set<string> = new Set();
       for (const service of services) {
@@ -316,7 +316,7 @@ export default class DidRequest {
     }
   }
 
-  private static validateService (service: IonServiceModel) {
+  private static validateService (service: DidServiceModel) {
     InputValidator.validateId(service.id);
 
     const maxTypeLength = 30;

@@ -6,7 +6,7 @@ import { AdaDid, DidKey, IonPublicKeyPurpose, IonSdkConfig } from '../lib/index'
 import AdaNetwork from '../lib/enums/AdaNetwork';
 import Encoder from '../lib/Encoder';
 import ErrorCode from '../lib/ErrorCode';
-import IonDocumentModel from '../lib/models/IonDocumentModel';
+import DidDocumentModel from '../lib/models/DidDocumentModel';
 import JasmineIonErrorValidator from './JasmineIonErrorValidator';
 
 describe('AdaDid', async () => {
@@ -36,7 +36,7 @@ describe('AdaDid', async () => {
       const recoveryKey = jwkEs256k1Public;
       const updateKey = jwkEs256k2Public;
 
-      const document: IonDocumentModel = {
+      const document: DidDocumentModel = {
         publicKeys: undefined,
         services: undefined
       };

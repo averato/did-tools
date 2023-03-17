@@ -1,7 +1,7 @@
 import * as Ed25519 from '@noble/ed25519';
 import * as Secp256k1 from '@noble/secp256k1';
 import InputValidator from './InputValidator';
-import IonPublicKeyModel from './models/IonPublicKeyModel';
+import DidPublicKeyModel from './models/DidPublicKeyModel';
 import IonPublicKeyPurpose from './enums/IonPublicKeyPurpose';
 import JwkEd25519 from './models/JwkEd25519';
 import JwkEs256k from './models/JwkEs256k';
@@ -16,7 +16,7 @@ export default class DidKey {
    * Mainly used for testing.
    * @returns [publicKey, privateKey]
    */
-  public static async generateEs256kDidDocumentKeyPair (input: { id: string, purposes?: IonPublicKeyPurpose[] }): Promise<[IonPublicKeyModel, JwkEs256k]> {
+  public static async generateEs256kDidDocumentKeyPair (input: { id: string, purposes?: IonPublicKeyPurpose[] }): Promise<[DidPublicKeyModel, JwkEs256k]> {
     const id = input.id;
     const purposes = input.purposes;
 
@@ -24,7 +24,7 @@ export default class DidKey {
     InputValidator.validatePublicKeyPurposes(purposes);
 
     const [publicKey, privateKey] = await DidKey.generateEs256kKeyPair();
-    const publicKeyModel: IonPublicKeyModel = {
+    const publicKeyModel: DidPublicKeyModel = {
       id,
       type: 'EcdsaSecp256k1VerificationKey2019',
       publicKeyJwk: publicKey
@@ -77,7 +77,7 @@ export default class DidKey {
    * Mainly used for testing.
    * @returns [publicKey, privateKey]
    */
-  public static async generateEd25519DidDocumentKeyPair (input: { id: string, purposes?: IonPublicKeyPurpose[] }): Promise<[IonPublicKeyModel, JwkEd25519]> {
+  public static async generateEd25519DidDocumentKeyPair (input: { id: string, purposes?: IonPublicKeyPurpose[] }): Promise<[DidPublicKeyModel, JwkEd25519]> {
     const id = input.id;
     const purposes = input.purposes;
 
@@ -85,7 +85,7 @@ export default class DidKey {
     InputValidator.validatePublicKeyPurposes(purposes);
 
     const [publicKey, privateKey] = await DidKey.generateEd25519KeyPair();
-    const publicKeyModel: IonPublicKeyModel = {
+    const publicKeyModel: DidPublicKeyModel = {
       id,
       type: 'JsonWebKey2020',
       publicKeyJwk: publicKey

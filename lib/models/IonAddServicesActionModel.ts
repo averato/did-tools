@@ -1,6 +1,6 @@
-import IonServiceModel from './IonServiceModel';
+import DidServiceModel from './DidServiceModel';
 
 export default interface IonAddServicesActionModel {
     action: string;
-    services: IonServiceModel[];
+    services: DidServiceModel[];
 }

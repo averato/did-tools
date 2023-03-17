@@ -1,6 +1,6 @@
-import IonPublicKeyModel from './IonPublicKeyModel';
+import DidPublicKeyModel from './DidPublicKeyModel';
 
 export default interface IonAddPublicKeysActionModel {
     action: string;
-    publicKeys: IonPublicKeyModel[];
+    publicKeys: DidPublicKeyModel[];
 }
