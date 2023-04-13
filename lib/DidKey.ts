@@ -1,5 +1,5 @@
-import * as Ed25519 from '@noble/ed25519';
-import * as Secp256k1 from '@noble/secp256k1';
+import * as Ed25519 from 'npm:@noble/ed25519';
+import * as Secp256k1 from 'npm:@noble/secp256k1';
 import InputValidator from './InputValidator.ts';
 import PublicKeyModel from './models/PublicKeyModel.ts';
 import PublicKeyPurpose from './enums/PublicKeyPurpose.ts';

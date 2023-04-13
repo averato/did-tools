@@ -13,7 +13,7 @@ export default class InputValidator {
    * Validates the schema of a ES256K JWK key.
    */
   public static validateEs256kOperationKey (operationKeyJwk: JwkEs256k, operationKeyType: OperationKeyType) {
-    const allowedProperties = new Set(['kty', 'crv', 'x', 'y']);
+    const allowedProperties = new Set(['alg', 'kty', 'crv', 'x', 'y']);
     if (operationKeyType === OperationKeyType.Private) {
       allowedProperties.add('d');
     }
