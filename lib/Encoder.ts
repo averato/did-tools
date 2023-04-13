@@ -1,6 +1,6 @@
-import ErrorCode from './ErrorCode';
-import IonError from './IonError';
-import { base64url } from 'multiformats/bases/base64';
+import ErrorCode from './ErrorCode.ts';
+import DidError from './DidError.ts';
+import { base64url } from 'npm:multiformats/bases/base64';
 
 /**
  * Class that encodes binary blobs into strings.
@@ -20,7 +20,7 @@ export default class Encoder {
    */
   public static decodeAsBytes (encodedContent: string, inputContextForErrorLogging: string): Uint8Array {
     if (!Encoder.isBase64UrlString(encodedContent)) {
-      throw new IonError(ErrorCode.EncodedStringIncorrectEncoding, `Given ${inputContextForErrorLogging} must be base64url string.`);
+      throw new DidError(ErrorCode.EncodedStringIncorrectEncoding, `Given ${inputContextForErrorLogging} must be base64url string.`);
     }
 
     return base64url.baseDecode(encodedContent);

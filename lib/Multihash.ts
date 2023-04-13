@@ -1,11 +1,11 @@
-import * as multihashes from 'multihashes';
-import Encoder from './Encoder';
-import ErrorCode from './ErrorCode';
-import { HashCode } from 'multihashes';
-import IonError from './IonError';
-import IonSdkConfig from './IonSdkConfig';
-import JsonCanonicalizer from './JsonCanonicalizer';
-import { sha256 } from 'multiformats/hashes/sha2';
+import * as multihashes from 'npm:multihashes';
+import Encoder from './Encoder.ts';
+import ErrorCode from './ErrorCode.ts';
+import { HashCode } from 'npm:multihashes';
+import DidError from './DidError.ts';
+import SdkConfig from './SdkConfig.ts';
+import JsonCanonicalizer from './JsonCanonicalizer.ts';
+import { sha256 } from 'npm:multiformats/hashes/sha2';
 
 /**
  * Class that performs hashing operations using the multihash format.
@@ -34,7 +34,7 @@ export default class Multihash {
         hash = await sha256.encode(content);
         break;
       default:
-        throw new IonError(
+        throw new DidError(
           ErrorCode.MultihashUnsupportedHashAlgorithm,
           `Hash algorithm defined in multihash code ${hashAlgorithmInMultihashCode} is not supported.`
         );
@@ -58,7 +58,7 @@ export default class Multihash {
    * Canonicalize the given content, then double hashes the result using the latest supported hash algorithm, then encodes the multihash.
    * Mainly used for testing purposes.
    */
-  public static async canonicalizeThenDoubleHashThenEncode (content: object, hashAlgorithmInMultihashCode: number): Promise<string> {
+  public static async canonicalizeThenDoubleHashThenEncode (content: Record<string, unknown>, hashAlgorithmInMultihashCode: number): Promise<string> {
     const contentBytes = JsonCanonicalizer.canonicalizeAsBytes(content);
 
     // Double hash.
@@ -89,18 +89,18 @@ export default class Multihash {
     try {
       multihash = multihashes.decode(multihashBytes);
     } catch {
-      throw new IonError(
+      throw new DidError(
         ErrorCode.MultihashStringNotAMultihash,
         `Given ${inputContextForErrorLogging} string '${encodedMultihash}' is not a multihash after decoding.`);
     }
 
-    const hashAlgorithmInMultihashCode = IonSdkConfig.hashAlgorithmInMultihashCode;
+    const hashAlgorithmInMultihashCode = SdkConfig.hashAlgorithmInMultihashCode;
 
     if (hashAlgorithmInMultihashCode !== multihash.code) {
-      throw new IonError(
+      throw new DidError(
         ErrorCode.MultihashUnsupportedHashAlgorithm,
         `Given ${inputContextForErrorLogging} uses unsupported multihash algorithm with code ${multihash.code}, ` +
-        `should use ${hashAlgorithmInMultihashCode} or change IonSdkConfig to desired hashing algorithm.`
+        `should use ${hashAlgorithmInMultihashCode} or change SdkConfig to desired hashing algorithm.`
       );
     }
   }

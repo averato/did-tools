@@ -1,4 +1,4 @@
-import DidKey from '../lib/DidKey';
+import DidKey from '../lib/DidKey.ts';
 
 (async () => {
   const [publicKey, privateKey] = await DidKey.generateEs256kOperationKeyPair();

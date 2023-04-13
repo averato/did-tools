@@ -1,22 +1,22 @@
-import * as URI from 'uri-js';
-import ErrorCode from './ErrorCode';
-import ISigner from './interfaces/ISigner';
-import InputValidator from './InputValidator';
-import IonCreateRequestModel from './models/IonCreateRequestModel';
-import IonDeactivateRequestModel from './models/IonDeactivateRequestModel';
-import IonDocumentModel from './models/IonDocumentModel';
-import IonError from './IonError';
-import IonPublicKeyModel from './models/IonPublicKeyModel';
-import IonRecoverRequestModel from './models/IonRecoverRequestModel';
-import IonSdkConfig from './IonSdkConfig';
-import IonServiceModel from './models/IonServiceModel';
-import IonUpdateRequestModel from './models/IonUpdateRequestModel';
-import JsonCanonicalizer from './JsonCanonicalizer';
-import JwkEs256k from './models/JwkEs256k';
-import Multihash from './Multihash';
-import OperationKeyType from './enums/OperationKeyType';
-import OperationType from './enums/OperationType';
-import PatchAction from './enums/PatchAction';
+import * as URI from 'npm:uri-js';
+import ErrorCode from './ErrorCode.ts';
+import ISigner from './interfaces/ISigner.ts';
+import InputValidator from './InputValidator.ts';
+import CreateRequestModel from './models/CreateRequestModel.ts';
+import DeactivateRequestModel from './models/DeactivateRequestModel.ts';
+import DocumentModel from './models/DocumentModel.ts';
+import DidError from './DidError.ts';
+import DidPublicKeyModel from './models/DidPublicKeyModel.ts';
+import RecoverRequestModel from './models/RecoverRequestModel.ts';
+import SdkConfig from './SdkConfig.ts';
+import ServiceModel from './models/ServiceModel.ts';
+import IonUpdateRequestModel from './models/IonUpdateRequestModel.ts';
+import JsonCanonicalizer from './JsonCanonicalizer.ts';
+import JwkEs256k from './models/JwkEs256k.ts';
+import Multihash from './Multihash.ts';
+import OperationKeyType from './enums/OperationKeyType.ts';
+import OperationType from './enums/OperationType.ts';
+import PatchAction from './enums/PatchAction.ts';
 
 /**
  * Class containing operations related to Cardano Ada requests.
@@ -29,8 +29,8 @@ export default class DidRequest {
   public static async createCreateRequest (input: {
     recoveryKey: JwkEs256k;
     updateKey: JwkEs256k;
-    document: IonDocumentModel;
-  }): Promise<IonCreateRequestModel> {
+    document: DocumentModel;
+  }): Promise<CreateRequestModel> {
     const recoveryKey = input.recoveryKey;
     const updateKey = input.updateKey;
     const didDocumentKeys = input.document.publicKeys;
@@ -46,7 +46,7 @@ export default class DidRequest {
     // Validate all given service.
     DidRequest.validateServices(services);
 
-    const hashAlgorithmInMultihashCode = IonSdkConfig.hashAlgorithmInMultihashCode;
+    const hashAlgorithmInMultihashCode = SdkConfig.hashAlgorithmInMultihashCode;
 
     const patches = [{
       action: PatchAction.Replace,
@@ -80,14 +80,14 @@ export default class DidRequest {
     didSuffix: string,
     recoveryPublicKey: JwkEs256k,
     signer: ISigner
-  }): Promise<IonDeactivateRequestModel> {
+  }): Promise<DeactivateRequestModel> {
     // Validate DID suffix
     DidRequest.validateDidSuffix(input.didSuffix);
 
     // Validates recovery public key
     InputValidator.validateEs256kOperationKey(input.recoveryPublicKey, OperationKeyType.Public);
 
-    const hashAlgorithmInMultihashCode = IonSdkConfig.hashAlgorithmInMultihashCode;
+    const hashAlgorithmInMultihashCode = SdkConfig.hashAlgorithmInMultihashCode;
     const revealValue = await Multihash.canonicalizeThenHashThenEncode(input.recoveryPublicKey, hashAlgorithmInMultihashCode);
 
     const dataToBeSigned = {
@@ -110,9 +110,9 @@ export default class DidRequest {
     recoveryPublicKey: JwkEs256k,
     nextRecoveryPublicKey: JwkEs256k,
     nextUpdatePublicKey: JwkEs256k,
-    document: IonDocumentModel,
+    document: DocumentModel,
     signer: ISigner
-  }): Promise<IonRecoverRequestModel> {
+  }): Promise<RecoverRequestModel> {
     // Validate DID suffix
     DidRequest.validateDidSuffix(input.didSuffix);
 
@@ -131,7 +131,7 @@ export default class DidRequest {
     // Validate all given service.
     DidRequest.validateServices(input.document.services);
 
-    const hashAlgorithmInMultihashCode = IonSdkConfig.hashAlgorithmInMultihashCode;
+    const hashAlgorithmInMultihashCode = SdkConfig.hashAlgorithmInMultihashCode;
     const revealValue = await Multihash.canonicalizeThenHashThenEncode(input.recoveryPublicKey, hashAlgorithmInMultihashCode);
 
     const patches = [{
@@ -170,9 +170,9 @@ export default class DidRequest {
     updatePublicKey: JwkEs256k;
     nextUpdatePublicKey: JwkEs256k;
     signer: ISigner;
-    servicesToAdd?: IonServiceModel[];
+    servicesToAdd?: ServiceModel[];
     idsOfServicesToRemove?: string[];
-    publicKeysToAdd?: IonPublicKeyModel[];
+    publicKeysToAdd?: DidPublicKeyModel[];
     idsOfPublicKeysToRemove?: string[];
   }): Promise<IonUpdateRequestModel> {
     // Validate DID suffix
@@ -249,7 +249,7 @@ export default class DidRequest {
       patches.push(patch);
     }
 
-    const hashAlgorithmInMultihashCode = IonSdkConfig.hashAlgorithmInMultihashCode;
+    const hashAlgorithmInMultihashCode = SdkConfig.hashAlgorithmInMultihashCode;
     const revealValue = await Multihash.canonicalizeThenHashThenEncode(input.updatePublicKey, hashAlgorithmInMultihashCode);
 
     const nextUpdateCommitmentHash = await Multihash.canonicalizeThenDoubleHashThenEncode(input.nextUpdatePublicKey, hashAlgorithmInMultihashCode);
@@ -279,7 +279,7 @@ export default class DidRequest {
     Multihash.validateEncodedHashComputedUsingSupportedHashAlgorithm(didSuffix, 'didSuffix');
   }
 
-  private static validateDidDocumentKeys (publicKeys?: IonPublicKeyModel[]) {
+  private static validateDidDocumentKeys (publicKeys?: DidPublicKeyModel[]) {
     if (publicKeys === undefined) {
       return;
     }
@@ -288,14 +288,14 @@ export default class DidRequest {
     const publicKeyIdSet: Set<string> = new Set();
     for (const publicKey of publicKeys) {
       if (Array.isArray(publicKey.publicKeyJwk)) {
-        throw new IonError(ErrorCode.DidDocumentPublicKeyMissingOrIncorrectType, `DID Document key 'publicKeyJwk' property is not a non-array object.`);
+        throw new DidError(ErrorCode.DidDocumentPublicKeyMissingOrIncorrectType, `DID Document key 'publicKeyJwk' property is not a non-array object.`);
       }
 
       InputValidator.validateId(publicKey.id);
 
       // 'id' must be unique across all given keys.
       if (publicKeyIdSet.has(publicKey.id)) {
-        throw new IonError(ErrorCode.DidDocumentPublicKeyIdDuplicated, `DID Document key with ID '${publicKey.id}' already exists.`);
+        throw new DidError(ErrorCode.DidDocumentPublicKeyIdDuplicated, `DID Document key with ID '${publicKey.id}' already exists.`);
       }
       publicKeyIdSet.add(publicKey.id);
 
@@ -303,47 +303,47 @@ export default class DidRequest {
     }
   }
 
-  private static validateServices (services?: IonServiceModel[]) {
+  private static validateServices (services?: ServiceModel[]) {
     if (services !== undefined && services.length !== 0) {
       const serviceIdSet: Set<string> = new Set();
       for (const service of services) {
         DidRequest.validateService(service);
         if (serviceIdSet.has(service.id)) {
-          throw new IonError(ErrorCode.DidDocumentServiceIdDuplicated, 'Service id has to be unique');
+          throw new DidError(ErrorCode.DidDocumentServiceIdDuplicated, 'Service id has to be unique');
         }
         serviceIdSet.add(service.id);
       }
     }
   }
 
-  private static validateService (service: IonServiceModel) {
+  private static validateService (service: ServiceModel) {
     InputValidator.validateId(service.id);
 
     const maxTypeLength = 30;
     if (service.type.length > maxTypeLength) {
       const errorMessage = `Service endpoint type length ${service.type.length} exceeds max allowed length of ${maxTypeLength}.`;
-      throw new IonError(ErrorCode.ServiceTypeTooLong, errorMessage);
+      throw new DidError(ErrorCode.ServiceTypeTooLong, errorMessage);
     }
 
     // Throw error if `serviceEndpoint` is an array.
     if (Array.isArray(service.serviceEndpoint)) {
       const errorMessage = 'Service endpoint value cannot be an array.';
-      throw new IonError(ErrorCode.ServiceEndpointCannotBeAnArray, errorMessage);
+      throw new DidError(ErrorCode.ServiceEndpointCannotBeAnArray, errorMessage);
     }
 
     if (typeof service.serviceEndpoint === 'string') {
       const uri = URI.parse(service.serviceEndpoint);
       if (uri.error !== undefined) {
-        throw new IonError(ErrorCode.ServiceEndpointStringNotValidUri, `Service endpoint string '${service.serviceEndpoint}' is not a URI.`);
+        throw new DidError(ErrorCode.ServiceEndpointStringNotValidUri, `Service endpoint string '${service.serviceEndpoint}' is not a URI.`);
       }
     }
   }
 
-  private static validateDeltaSize (delta: object) {
+  private static validateDeltaSize (delta: Record<string, unknown>) {
     const deltaBytes = JsonCanonicalizer.canonicalizeAsBytes(delta);
-    if (deltaBytes.length > IonSdkConfig.maxCanonicalizedDeltaSizeInBytes) {
-      const errorMessage = `Delta of ${deltaBytes.length} bytes exceeded limit of ${IonSdkConfig.maxCanonicalizedDeltaSizeInBytes} bytes.`;
-      throw new IonError(ErrorCode.DeltaExceedsMaximumSize, errorMessage);
+    if (deltaBytes.length > SdkConfig.maxCanonicalizedDeltaSizeInBytes) {
+      const errorMessage = `Delta of ${deltaBytes.length} bytes exceeded limit of ${SdkConfig.maxCanonicalizedDeltaSizeInBytes} bytes.`;
+      throw new DidError(ErrorCode.DeltaExceedsMaximumSize, errorMessage);
     }
   }
 }
