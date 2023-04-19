@@ -180,6 +180,9 @@ export async function anchor(anchorRequest, options = {}) {
     // challengeEndpoint = 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
     solutionEndpoint = 'http://localhost:3000/operations'
   } = options;
+  
+  console.log(`Anchor Request Body: ${JSON.stringify(anchorRequest)}`); 
+
   const response = await fetch(solutionEndpoint, {
      method: "POST",
      body: JSON.stringify(anchorRequest) 

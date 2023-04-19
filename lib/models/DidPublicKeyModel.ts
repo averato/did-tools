@@ -6,6 +6,6 @@ import PublicKeyPurpose from '../enums/PublicKeyPurpose.ts';
 export default interface DidPublicKeyModel {
   id: string;
   type: string;
-  publicKeyJwk: Record<string, unknown>;
+  publicKeyJwk: object;
   purposes?: PublicKeyPurpose[];
 }

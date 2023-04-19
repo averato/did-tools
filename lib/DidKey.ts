@@ -53,13 +53,14 @@ export default class DidKey {
     // the first byte is a header that indicates whether the key is uncompressed (0x04 if uncompressed).
     // bytes 1 - 32 represent X
     // bytes 33 - 64 represent Y
-    const publicKeyBytes = await Secp256k1.getPublicKey(privateKeyBytes);
+    const publicKeyBytes = await Secp256k1.getPublicKey(privateKeyBytes, false);
 
     const d = base64url.baseEncode(privateKeyBytes);
     // skip the first byte because it's used as a header to indicate whether the key is uncompressed
     const x = base64url.baseEncode(publicKeyBytes.subarray(1, 33));
     const y = base64url.baseEncode(publicKeyBytes.subarray(33, 65));
 
+    // console.log(`Key properties x: ${x} and y: ${y}`); 
     const publicJwk = {
       alg: 'ES256K',
       kty: 'EC',

@@ -37,6 +37,7 @@ export default class InputValidator {
     }
 
     if (operationKeyJwk.y.length !== 43) {
+      // console.log(`Bad Operation key is: ${JSON.stringify(operationKeyJwk)}`);  
       throw new DidError(ErrorCode.JwkEs256kHasIncorrectLengthOfY, `SECP256K1 JWK 'y' property must be 43 bytes.`);
     }
 

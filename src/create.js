@@ -10,7 +10,7 @@ const did = new DID({
         id: 'key-1',
         type: 'EcdsaSecp256k1VerificationKey2019',
         publicKeyJwk: authnKeys.publicJwk,
-        purposes: [ 'authentication' ]
+        purposes: ['authentication']
       }
     ],
     services: [
@@ -23,9 +23,18 @@ const did = new DID({
   }
 });
 
+// Did long and short URI
+const longFormURI  = await did.getURI();
+const shortFormURI = await did.getURI('short');
+
+console.log(`Your long DiD URI is: ${longFormURI}`);
+console.log(`Your short DiD is: ${shortFormURI}`);
+
 // Generate and publish create request to an ION node
 const createRequest = await did.generateRequest(0);
-const _anchorResponse = await anchor(createRequest);
+const anchorResponse = await anchor(createRequest);
+const respBody = await anchorResponse.json();
+console.log(`Your DID is: ${JSON.stringify(respBody)}`);
 
 // Store the key material and source data of all operations that have been created for the DID
 const didOps = await did.getAllOperations();

@@ -1,4 +1,4 @@
-import { DidRequest, LocalSigner } from '../lib/index.ts';
+import { AdaDid, DidRequest, LocalSigner } from '../lib/index.ts';
 import { generateKeyPair } from './utils.js';
 
 export class DID {
@@ -153,7 +153,7 @@ export class DID {
     if (!this.#longForm) {
       this.#longFormPromise = this.#addToOpQueue(async () => {
         const create = await this.getOperation(0);
-        return IonDid.createLongFormDid({
+        return AdaDid.createLongFormDid({
           recoveryKey: create.recovery.publicJwk,
           updateKey: create.update.publicJwk,
           document: create.content
