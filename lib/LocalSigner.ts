@@ -1,11 +1,11 @@
-import * as Secp256k1 from '@noble/secp256k1';
-import Encoder from './Encoder';
-import ISigner from './interfaces/ISigner';
-import InputValidator from './InputValidator';
-import JwkEs256k from './models/JwkEs256k';
-import OperationKeyType from './enums/OperationKeyType';
-import { base64url } from 'multiformats/bases/base64';
-import { sha256 } from 'multiformats/hashes/sha2';
+import * as Secp256k1 from 'npm:secp256k1';
+import Encoder from './Encoder.ts';
+import ISigner from './interfaces/ISigner.ts';
+import InputValidator from './InputValidator.ts';
+import JwkEs256k from './models/JwkEs256k.ts';
+import OperationKeyType from './enums/OperationKeyType.ts';
+import { base64url } from 'npm:multiformats/bases/base64';
+import { sha256 } from 'npm:multiformats/hashes/sha2';
 
 /**
  * An ISigner implementation that uses a given local private key.
@@ -22,7 +22,7 @@ export default class LocalSigner implements ISigner {
     InputValidator.validateEs256kOperationKey(privateKey, OperationKeyType.Private);
   }
 
-  public async sign (header: object, content: object): Promise<string> {
+  public async sign (header: Record<string, unknown>, content: Record<string, unknown>): Promise<string> {
     const headerString = JSON.stringify(header);
     const headerBytes = Encoder.stringToBytes(headerString);
     const encodedHeader = base64url.baseEncode(headerBytes);

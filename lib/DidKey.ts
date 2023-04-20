@@ -1,11 +1,11 @@
-import * as Ed25519 from '@noble/ed25519';
-import * as Secp256k1 from '@noble/secp256k1';
-import InputValidator from './InputValidator';
-import IonPublicKeyModel from './models/IonPublicKeyModel';
-import IonPublicKeyPurpose from './enums/IonPublicKeyPurpose';
-import JwkEd25519 from './models/JwkEd25519';
-import JwkEs256k from './models/JwkEs256k';
-import { base64url } from 'multiformats/bases/base64';
+import * as Ed25519 from 'npm:@noble/ed25519';
+import * as Secp256k1 from 'npm:@noble/secp256k1';
+import InputValidator from './InputValidator.ts';
+import PublicKeyModel from './models/PublicKeyModel.ts';
+import PublicKeyPurpose from './enums/PublicKeyPurpose.ts';
+import JwkEd25519 from './models/JwkEd25519.ts';
+import JwkEs256k from './models/JwkEs256k.ts';
+import { base64url } from 'npm:multiformats/bases/base64';
 
 /**
  * Class containing operations related to keys used in ION.
@@ -16,7 +16,7 @@ export default class DidKey {
    * Mainly used for testing.
    * @returns [publicKey, privateKey]
    */
-  public static async generateEs256kDidDocumentKeyPair (input: { id: string, purposes?: IonPublicKeyPurpose[] }): Promise<[IonPublicKeyModel, JwkEs256k]> {
+  public static async generateEs256kDidDocumentKeyPair (input: { id: string, purposes?: PublicKeyPurpose[] }): Promise<[PublicKeyModel, JwkEs256k]> {
     const id = input.id;
     const purposes = input.purposes;
 
@@ -24,7 +24,7 @@ export default class DidKey {
     InputValidator.validatePublicKeyPurposes(purposes);
 
     const [publicKey, privateKey] = await DidKey.generateEs256kKeyPair();
-    const publicKeyModel: IonPublicKeyModel = {
+    const publicKeyModel: PublicKeyModel = {
       id,
       type: 'EcdsaSecp256k1VerificationKey2019',
       publicKeyJwk: publicKey
@@ -53,15 +53,16 @@ export default class DidKey {
     // the first byte is a header that indicates whether the key is uncompressed (0x04 if uncompressed).
     // bytes 1 - 32 represent X
     // bytes 33 - 64 represent Y
-    const publicKeyBytes = await Secp256k1.getPublicKey(privateKeyBytes);
+    const publicKeyBytes = await Secp256k1.getPublicKey(privateKeyBytes, false);
 
     const d = base64url.baseEncode(privateKeyBytes);
     // skip the first byte because it's used as a header to indicate whether the key is uncompressed
     const x = base64url.baseEncode(publicKeyBytes.subarray(1, 33));
     const y = base64url.baseEncode(publicKeyBytes.subarray(33, 65));
 
+    // console.log(`Key properties x: ${x} and y: ${y}`); 
     const publicJwk = {
-      // alg: 'ES256K',
+      alg: 'ES256K',
       kty: 'EC',
       crv: 'secp256k1',
       x,
@@ -77,7 +78,7 @@ export default class DidKey {
    * Mainly used for testing.
    * @returns [publicKey, privateKey]
    */
-  public static async generateEd25519DidDocumentKeyPair (input: { id: string, purposes?: IonPublicKeyPurpose[] }): Promise<[IonPublicKeyModel, JwkEd25519]> {
+  public static async generateEd25519DidDocumentKeyPair (input: { id: string, purposes?: PublicKeyPurpose[] }): Promise<[PublicKeyModel, JwkEd25519]> {
     const id = input.id;
     const purposes = input.purposes;
 
@@ -85,7 +86,7 @@ export default class DidKey {
     InputValidator.validatePublicKeyPurposes(purposes);
 
     const [publicKey, privateKey] = await DidKey.generateEd25519KeyPair();
-    const publicKeyModel: IonPublicKeyModel = {
+    const publicKeyModel: PublicKeyModel = {
       id,
       type: 'JsonWebKey2020',
       publicKeyJwk: publicKey
@@ -116,7 +117,7 @@ export default class DidKey {
     const x = base64url.baseEncode(publicKeyBytes);
 
     const publicJwk = {
-      // alg: 'EdDSA',
+      alg: 'EdDSA',
       kty: 'OKP',
       crv: 'Ed25519',
       x
@@ -128,9 +129,9 @@ export default class DidKey {
 
   public static isJwkEs256k (key: JwkEs256k | JwkEd25519): key is JwkEs256k {
     return key.crv === 'secp256k1' && key.kty === 'EC';
-  };
+  }
 
   public static isJwkEd25519 (key: JwkEs256k | JwkEd25519): key is JwkEd25519 {
     return key.crv === 'Ed25519' && key.kty === 'OKP';
-  };
+  }
 }

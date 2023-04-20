@@ -1,6 +1,5 @@
-import Encoder from './Encoder';
-
-const canonicalize = require('canonicalize');
+import Encoder from './Encoder.ts';
+import canonicalize from 'npm:canonicalize';
 
 /**
  * Class containing reusable JSON canonicalization operations using JSON Canonicalization Scheme (JCS).

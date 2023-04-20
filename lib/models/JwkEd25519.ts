@@ -6,4 +6,4 @@ export default interface JwkEd25519 {
   crv: string;
   x: string;
   d?: string; // Only used by a private key.
-};
+}

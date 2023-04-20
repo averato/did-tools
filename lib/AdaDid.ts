@@ -1,10 +1,10 @@
-import DidRequest from './DidRequest';
-import Encoder from './Encoder';
-import IonDocumentModel from './models/IonDocumentModel';
-import IonSdkConfig from './IonSdkConfig';
-import JsonCanonicalizer from './JsonCanonicalizer';
-import JwkEs256k from './models/JwkEs256k';
-import Multihash from './Multihash';
+import DidRequest from './DidRequest.ts';
+import Encoder from './Encoder.ts';
+import DocumentModel from './models/DocumentModel.ts';
+import SdkConfig from './SdkConfig.ts';
+import JsonCanonicalizer from './JsonCanonicalizer.ts';
+import JwkEs256k from './models/JwkEs256k.ts';
+import Multihash from './Multihash.ts';
 
 /**
  * Class containing DID related operations.
@@ -17,7 +17,7 @@ export default class AdaDid {
   public static async createLongFormDid (input: {
     recoveryKey: JwkEs256k;
     updateKey: JwkEs256k;
-    document: IonDocumentModel;
+    document: DocumentModel;
   }): Promise<string> {
     const createRequest = await DidRequest.createCreateRequest(input);
 
@@ -25,11 +25,11 @@ export default class AdaDid {
 
     // Add the network portion if not configured for mainnet.
     let shortFormDid;
-    if (IonSdkConfig.network === undefined ||
-        IonSdkConfig.network === 'mainnet') {
+    if (SdkConfig.network === undefined ||
+        SdkConfig.network === 'mainnet') {
       shortFormDid = `did:ada:${didUniqueSuffix}`;
     } else {
-      shortFormDid = `did:ada:${IonSdkConfig.network}:${didUniqueSuffix}`;
+      shortFormDid = `did:ada:${SdkConfig.network}:${didUniqueSuffix}`;
     }
 
     const initialState = {
@@ -48,9 +48,9 @@ export default class AdaDid {
   /**
    * Computes the DID unique suffix given the encoded suffix data string.
    */
-  private static async computeDidUniqueSuffix (suffixData: object): Promise<string> {
+  private static async computeDidUniqueSuffix (suffixData: Record<string, unknown>): Promise<string> {
     const canonicalizedStringBytes = JsonCanonicalizer.canonicalizeAsBytes(suffixData);
-    const multihash = await Multihash.hash(canonicalizedStringBytes, IonSdkConfig.hashAlgorithmInMultihashCode);
+    const multihash = await Multihash.hash(canonicalizedStringBytes, SdkConfig.hashAlgorithmInMultihashCode);
     const encodedMultihash = Encoder.encode(multihash);
     return encodedMultihash;
   }
