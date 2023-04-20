@@ -1,15 +1,17 @@
-import { anchor, DID, generateKeyPair } from './index.js';
-// import { writeFile } from 'npm:fs/promises';
+import { anchor, DID, generateKeyPair, resolve } from './index.js';
 
 // Generate keys and ION DID
-const authnKeys = await generateKeyPair();
+const authKeys = await generateKeyPair();
+
+console.log(`Your Key Pair is: ${JSON.stringify(authKeys)}`); 
+
 const did = new DID({
   content: {
     publicKeys: [
       {
         id: 'key-1',
         type: 'EcdsaSecp256k1VerificationKey2019',
-        publicKeyJwk: authnKeys.publicJwk,
+        publicKeyJwk: authKeys.publicJwk,
         purposes: ['authentication']
       }
     ],
@@ -39,3 +41,7 @@ console.log(`Your DID is: ${JSON.stringify(respBody)}`);
 // Store the key material and source data of all operations that have been created for the DID
 const didOps = await did.getAllOperations();
 await Deno.writeTextFile('./did-ops-v1.json', JSON.stringify({ ops: didOps }));
+
+//Reolve DiD
+const resolvedDiD = await resolve(longFormURI);
+console.log(`Yuor Resolved DiD: ${JSON.stringify(resolvedDiD)}`);

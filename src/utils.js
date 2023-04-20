@@ -1,7 +1,6 @@
-import * as ed25519 from '@noble/ed25519';
-import * as secp256k1 from '@noble/secp256k1';
-
-import { base64url } from 'multiformats/bases/base64';
+import * as ed25519 from 'npm:@noble/ed25519';
+import * as secp256k1 from 'npm:@noble/secp256k1';
+import { base64url } from 'npm:multiformats/bases/base64';
 import DidKey from '../lib/DidKey.ts';
 import { sha256 } from 'npm:multiformats/hashes/sha2';
 
@@ -164,7 +163,7 @@ export async function verify(params = {}) {
  * @returns
  */
 export async function resolve(didUri, options = {}) {
-  const { nodeEndpoint = 'https://beta.discover.did.microsoft.com/1.0/identifiers' } = options;
+  const { nodeEndpoint = 'http://localhost:3000/identifiers' } = options;
 
   const response = await fetch(`${nodeEndpoint}/${didUri}`);
 
