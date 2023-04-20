@@ -169,6 +169,7 @@ export async function verify(params = {}) {
  * @returns
  */
 export async function resolve(didUri, options = {}) {
+  // TODO: We need to make address configurable 
   const { nodeEndpoint = "http://localhost:3000/identifiers" } = options;
 
   const response = await fetch(`${nodeEndpoint}/${didUri}`);
@@ -182,7 +183,7 @@ export async function resolve(didUri, options = {}) {
 
 export async function anchor(anchorRequest, options = {}) {
   const {
-    // challengeEndpoint = 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
+    // TODO: We need to make address configurable  challengeEndpoint = 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
     solutionEndpoint = "http://localhost:3000/operations",
   } = options;
 

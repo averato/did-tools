@@ -1,6 +1,6 @@
-# TypeScript/JavaScript SDK for `did:ion`
-- This SDK allows you to create `did:ion` operations that are ready to be submitted to an ION node.
-- You can also use the SDK to create long-form ION DIDs.
+# TypeScript/JavaScript SDK for `did:ada`
+- This SDK allows you to create `did:ada` operations that are ready to be submitted to an ION node.
+- You can also use the SDK to create long-form DID-tools library.
 - This SDK is compatible with both node.js and browser.
 
 Code Coverage
