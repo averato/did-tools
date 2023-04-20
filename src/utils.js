@@ -1,8 +1,8 @@
-import * as ed25519 from 'npm:@noble/ed25519';
-import * as secp256k1 from 'npm:@noble/secp256k1';
-import { base64url } from 'npm:multiformats/bases/base64';
-import DidKey from '../lib/DidKey.ts';
-import { sha256 } from 'npm:multiformats/hashes/sha2';
+import * as ed25519 from "npm:@noble/ed25519";
+import * as secp256k1 from "npm:@noble/secp256k1";
+import { base64url } from "npm:multiformats/bases/base64";
+import DidKey from "../lib/DidKey.ts";
+import { sha256 } from "npm:multiformats/hashes/sha2";
 
 // supports fetch in: node, browsers, and browser extensions.
 // uses native fetch if available in environment or falls back to a ponyfill.
@@ -32,10 +32,10 @@ import { sha256 } from 'npm:multiformats/hashes/sha2';
  */
 
 const keyGenerators = {
-  'Ed25519': DidKey.generateEd25519OperationKeyPair,
-  'EdDSA': DidKey.generateEd25519OperationKeyPair,
-  'secp256k1': DidKey.generateEs256kOperationKeyPair,
-  'ES256K': DidKey.generateEs256kOperationKeyPair
+  "Ed25519": DidKey.generateEd25519OperationKeyPair,
+  "EdDSA": DidKey.generateEd25519OperationKeyPair,
+  "secp256k1": DidKey.generateEs256kOperationKeyPair,
+  "ES256K": DidKey.generateEs256kOperationKeyPair,
 };
 
 /**
@@ -43,14 +43,14 @@ const keyGenerators = {
  * @param {'Ed25519'| 'EdDSA' | 'secp256k1' | 'ES256K'} type
  * @returns {KeyPair}
  */
-export async function generateKeyPair(type = 'secp256k1') {
+export async function generateKeyPair(type = "secp256k1") {
   const keyGeneratorFn = keyGenerators[type];
 
   if (!keyGeneratorFn) {
-    throw new Error('Unsupported key type');
+    throw new Error("Unsupported key type");
   }
 
-  const [ publicJwk, privateJwk ] = await keyGeneratorFn();
+  const [publicJwk, privateJwk] = await keyGeneratorFn();
   return { publicJwk, privateJwk };
 }
 
@@ -62,25 +62,25 @@ export async function generateKeyPair(type = 'secp256k1') {
  * @param {PrivateJWK} params.privateJwk - the key to sign with
  * @returns {string} compact JWS
  */
-export async function sign(params = { }) {
-  const { header = { }, payload, privateJwk } = params;
+export async function sign(params = {}) {
+  const { header = {}, payload, privateJwk } = params;
   let signer;
   let signerOpts;
 
   switch (privateJwk.crv) {
-    case 'Ed25519':
-      header.alg = 'EdDSA';
+    case "Ed25519":
+      header.alg = "EdDSA";
       signer = ed25519;
       break;
 
-    case 'secp256k1':
-      header.alg = 'ES256K';
+    case "secp256k1":
+      header.alg = "ES256K";
       signer = secp256k1;
       signerOpts = { der: false };
       break;
 
     default:
-      throw new Error('Unsupported cryptographic type');
+      throw new Error("Unsupported cryptographic type");
   }
 
   const textEncoder = new TextEncoder();
@@ -97,13 +97,17 @@ export async function sign(params = { }) {
   const message = `${headerBase64Url}.${payloadBase64Url}`;
   let messageBytes = textEncoder.encode(message);
 
-  if (privateJwk.crv === 'secp256k1') {
+  if (privateJwk.crv === "secp256k1") {
     messageBytes = await sha256.encode(messageBytes);
   }
 
   const privateKeyBytes = base64url.baseDecode(privateJwk.d);
 
-  const signatureBytes = await signer.sign(messageBytes, privateKeyBytes, signerOpts);
+  const signatureBytes = await signer.sign(
+    messageBytes,
+    privateKeyBytes,
+    signerOpts,
+  );
   const signature = base64url.baseEncode(signatureBytes);
 
   return `${message}.${signature}`;
@@ -118,7 +122,9 @@ export async function sign(params = { }) {
  */
 export async function verify(params = {}) {
   const { jws, publicJwk } = params;
-  const [ headerBase64Url, payloadBase64Url, signatureBase64Url ] = jws.split('.');
+  const [headerBase64Url, payloadBase64Url, signatureBase64Url] = jws.split(
+    ".",
+  );
 
   const message = `${headerBase64Url}.${payloadBase64Url}`;
   const messageBytes = new TextEncoder().encode(message);
@@ -126,7 +132,7 @@ export async function verify(params = {}) {
   const signatureBytes = base64url.baseDecode(signatureBase64Url);
 
   switch (publicJwk.crv) {
-    case 'secp256k1': {
+    case "secp256k1": {
       const xBytes = base64url.baseDecode(publicJwk.x);
       const yBytes = base64url.baseDecode(publicJwk.y);
 
@@ -144,14 +150,14 @@ export async function verify(params = {}) {
       return secp256k1.verify(signatureBytes, hashedMessage, publicKeyBytes);
     }
 
-    case 'Ed25519': {
+    case "Ed25519": {
       const publicKeyBytes = base64url.baseDecode(publicJwk.x);
 
       return ed25519.verify(signatureBytes, messageBytes, publicKeyBytes);
     }
 
     default:
-      throw new Error('Unsupported cryptographic type');
+      throw new Error("Unsupported cryptographic type");
   }
 }
 
@@ -163,7 +169,7 @@ export async function verify(params = {}) {
  * @returns
  */
 export async function resolve(didUri, options = {}) {
-  const { nodeEndpoint = 'http://localhost:3000/identifiers' } = options;
+  const { nodeEndpoint = "http://localhost:3000/identifiers" } = options;
 
   const response = await fetch(`${nodeEndpoint}/${didUri}`);
 
@@ -177,14 +183,14 @@ export async function resolve(didUri, options = {}) {
 export async function anchor(anchorRequest, options = {}) {
   const {
     // challengeEndpoint = 'https://beta.ion.msidentity.com/api/v1.0/proof-of-work-challenge',
-    solutionEndpoint = 'http://localhost:3000/operations'
+    solutionEndpoint = "http://localhost:3000/operations",
   } = options;
-  
-  console.log(`Anchor Request Body: ${JSON.stringify(anchorRequest)}`); 
+
+  console.log(`Anchor Request Body: ${JSON.stringify(anchorRequest)}`);
 
   const response = await fetch(solutionEndpoint, {
-     method: "POST",
-     body: JSON.stringify(anchorRequest) 
-  }); 
+    method: "POST",
+    body: JSON.stringify(anchorRequest),
+  });
   return response; // ProofOfWorkSDK.submitIonRequest(challengeEndpoint, solutionEndpoint, JSON.stringify(anchorRequest));
 }
