@@ -44,4 +44,6 @@ await Deno.writeTextFile("./did-ops-v1.json", JSON.stringify({ ops: didOps }));
 
 // Reolve DiD
 const resolvedDiD = await resolve(longFormURI);
+await Deno.writeTextFile("./did-v1.json", JSON.stringify(resolvedDiD));
+
 console.log(`Yuor Resolved DiD: ${JSON.stringify(resolvedDiD)}`);
